@@ -3,8 +3,10 @@ package com.example.taskmanager.service;
 import com.example.taskmanager.dto.TaskRequest;
 import com.example.taskmanager.dto.TaskResponse;
 import com.example.taskmanager.entity.Task;
+import com.example.taskmanager.entity.User;
 import com.example.taskmanager.exception.TaskNotFoundException;
 import com.example.taskmanager.repository.TaskRepository;
+import com.example.taskmanager.repository.UserRepository;
 import com.example.taskmanager.specification.TaskSpecification;
 
 import org.springframework.data.domain.Page;
@@ -15,9 +17,14 @@ import org.springframework.stereotype.Service;
 public class TaskService {
 
     private final TaskRepository taskRepository;
+    private final UserRepository userRepository;
 
-    public TaskService(TaskRepository taskRepository) {
+    public TaskService(
+            TaskRepository taskRepository,
+            UserRepository userRepository
+    ) {
         this.taskRepository = taskRepository;
+        this.userRepository = userRepository;
     }
 
     public Page<TaskResponse> getAllTasks(
@@ -52,11 +59,20 @@ public class TaskService {
 
     public TaskResponse createTask(TaskRequest request) {
 
+        User user = userRepository.findById(request.getUserId())
+                .orElseThrow(
+                        () -> new TaskNotFoundException(
+                                "User not found with id: "
+                                        + request.getUserId()
+                        )
+                );
+
         Task task = new Task();
 
         task.setTitle(request.getTitle());
         task.setDescription(request.getDescription());
         task.setCompleted(request.isCompleted());
+        task.setUser(user);
 
         Task savedTask = taskRepository.save(task);
 
@@ -75,9 +91,18 @@ public class TaskService {
                         )
                 );
 
+        User user = userRepository.findById(request.getUserId())
+                .orElseThrow(
+                        () -> new TaskNotFoundException(
+                                "User not found with id: "
+                                        + request.getUserId()
+                        )
+                );
+
         task.setTitle(request.getTitle());
         task.setDescription(request.getDescription());
         task.setCompleted(request.isCompleted());
+        task.setUser(user);
 
         Task updatedTask = taskRepository.save(task);
 
@@ -102,7 +127,8 @@ public class TaskService {
                 task.getId(),
                 task.getTitle(),
                 task.getDescription(),
-                task.isCompleted()
+                task.isCompleted(),
+                task.getUser().getId()
         );
     }
 }
