@@ -14,6 +14,8 @@ import org.springframework.http.ResponseEntity;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @RestController
 @RequestMapping("/api/tasks")
@@ -44,16 +46,39 @@ public class TaskController {
 //        return ResponseEntity.ok(response);
 //    }
 
+//    @GetMapping
+//    public ResponseEntity<Page<TaskResponse>> getAllTasks(
+//            @RequestParam(required = false) String keyword,
+//            @RequestParam(required = false) Boolean completed,
+//            Pageable pageable
+//    ) {
+//
+//        Page<TaskResponse> response =
+//                taskService.getAllTasks(
+//                        keyword,
+//                        completed,
+//                        pageable
+//                );
+//
+//        return ResponseEntity.ok(response);
+//    }
+
     @GetMapping
     public ResponseEntity<Page<TaskResponse>> getAllTasks(
+            @RequestParam(required = false) String keyword,
+            @RequestParam(required = false) Boolean completed,
             Pageable pageable
     ) {
 
-        Page<TaskResponse> response = taskService.getAllTasks(pageable);
+        Page<TaskResponse> response =
+                taskService.getAllTasks(
+                        keyword,
+                        completed,
+                        pageable
+                );
 
         return ResponseEntity.ok(response);
     }
-
 
     @GetMapping("/{id}")
     public ResponseEntity<TaskResponse> getTaskById(
