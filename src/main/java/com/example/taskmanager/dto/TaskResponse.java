@@ -1,26 +1,26 @@
-package com.example.taskmanager.entity;
+package com.example.taskmanager.dto;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
-//import jakarta.validation.constraints.NotBlank;
-////import jakarta.validation.constraints.Size;
+public class TaskResponse {
 
-@Entity
-public class Task {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String title;
-
     private String description;
-
     private boolean completed;
+
+    public TaskResponse() {
+    }
+
+    public TaskResponse(
+            Long id,
+            String title,
+            String description,
+            boolean completed
+    ) {
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        this.completed = completed;
+    }
 
     public Long getId() {
         return id;
