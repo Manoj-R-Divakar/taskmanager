@@ -38,4 +38,28 @@ public class TaskService {
         return taskRepository.findById(id)
                 .orElseThrow(() -> new TaskNotFoundException("Task not found with id: " + id));
     }
+
+    public Task updateTask(Long id, Task updatedTask) {
+
+        Task existingTask = taskRepository.findById(id)
+                .orElseThrow(() -> new TaskNotFoundException(
+                        "Task not found with id: " + id
+                ));
+
+        existingTask.setTitle(updatedTask.getTitle());
+        existingTask.setDescription(updatedTask.getDescription());
+        existingTask.setCompleted(updatedTask.isCompleted());
+
+        return taskRepository.save(existingTask);
+    }
+
+    public void deleteTask(Long id) {
+
+        Task existingTask = taskRepository.findById(id)
+                .orElseThrow(() -> new TaskNotFoundException(
+                        "Task not found with id: " + id
+                ));
+
+        taskRepository.delete(existingTask);
+    }
 }
