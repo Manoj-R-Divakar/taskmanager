@@ -6,6 +6,8 @@ import com.example.taskmanager.entity.Task;
 import com.example.taskmanager.exception.TaskNotFoundException;
 import com.example.taskmanager.repository.TaskRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -31,14 +33,22 @@ public class TaskService {
         return convertToResponse(savedTask);
     }
 
-    public List<TaskResponse> getAllTasks() {
+//    public List<TaskResponse> getAllTasks() {
+//
+//        List<Task> tasks = taskRepository.findAll();
+//
+//        return tasks.stream()
+//                .map(this::convertToResponse)
+//                .toList();
+//    }
 
-        List<Task> tasks = taskRepository.findAll();
+    public Page<TaskResponse> getAllTasks(Pageable pageable) {
 
-        return tasks.stream()
-                .map(this::convertToResponse)
-                .toList();
+        Page<Task> tasks = taskRepository.findAll(pageable);
+
+        return tasks.map(this::convertToResponse);
     }
+
 
     public TaskResponse getTaskById(Long id) {
 

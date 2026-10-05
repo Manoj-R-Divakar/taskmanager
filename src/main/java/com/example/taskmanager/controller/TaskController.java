@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 @RestController
 @RequestMapping("/api/tasks")
 public class TaskController {
@@ -33,13 +36,24 @@ public class TaskController {
                 .body(response);
     }
 
-    @GetMapping
-    public ResponseEntity<List<TaskResponse>> getAllTasks() {
+//    @GetMapping
+//    public ResponseEntity<List<TaskResponse>> getAllTasks() {
+//
+//        List<TaskResponse> response = taskService.getAllTasks();
+//
+//        return ResponseEntity.ok(response);
+//    }
 
-        List<TaskResponse> response = taskService.getAllTasks();
+    @GetMapping
+    public ResponseEntity<Page<TaskResponse>> getAllTasks(
+            Pageable pageable
+    ) {
+
+        Page<TaskResponse> response = taskService.getAllTasks(pageable);
 
         return ResponseEntity.ok(response);
     }
+
 
     @GetMapping("/{id}")
     public ResponseEntity<TaskResponse> getTaskById(
