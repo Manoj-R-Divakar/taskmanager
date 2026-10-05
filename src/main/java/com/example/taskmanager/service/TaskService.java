@@ -1,6 +1,7 @@
 package com.example.taskmanager.service;
 
 import com.example.taskmanager.entity.Task;
+import com.example.taskmanager.exception.TaskNotFoundException;
 import com.example.taskmanager.repository.TaskRepository;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +20,22 @@ public class TaskService {
         return taskRepository.save(task);
     }
 
+//    public List<Task> getAllTasks() {
+//        return taskRepository.findAll();
+//    }
+
     public List<Task> getAllTasks() {
-        return taskRepository.findAll();
+        List<Task> tasks = taskRepository.findAll();
+
+        return tasks;
+    }
+
+//    public Task getTaskById(Long id) {
+//        return taskRepository.findById(id).orElse(null);
+//    }
+
+    public Task getTaskById(Long id) {
+        return taskRepository.findById(id)
+                .orElseThrow(() -> new TaskNotFoundException("Task not found with id: " + id));
     }
 }
