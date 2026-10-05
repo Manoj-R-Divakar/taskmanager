@@ -9,6 +9,8 @@ import com.example.taskmanager.service.TaskService;
 import jakarta.validation.Valid;
 
 import org.springframework.web.bind.annotation.*;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 @RestController
 @RequestMapping("/api/tasks")
@@ -21,32 +23,49 @@ public class TaskController {
     }
 
     @PostMapping
-    public TaskResponse createTask(
+    public ResponseEntity<TaskResponse> createTask(
             @Valid @RequestBody TaskRequest request
     ) {
-        return taskService.createTask(request);
+        TaskResponse response = taskService.createTask(request);
+
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(response);
     }
 
     @GetMapping
-    public List<TaskResponse> getAllTasks() {
-        return taskService.getAllTasks();
+    public ResponseEntity<List<TaskResponse>> getAllTasks() {
+
+        List<TaskResponse> response = taskService.getAllTasks();
+
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{id}")
-    public TaskResponse getTaskById(@PathVariable Long id) {
-        return taskService.getTaskById(id);
+    public ResponseEntity<TaskResponse> getTaskById(
+            @PathVariable Long id
+    ) {
+        TaskResponse response = taskService.getTaskById(id);
+
+        return ResponseEntity.ok(response);
     }
 
     @PutMapping("/{id}")
-    public TaskResponse updateTask(
+    public ResponseEntity<TaskResponse> updateTask(
             @PathVariable Long id,
             @Valid @RequestBody TaskRequest request
     ) {
-        return taskService.updateTask(id, request);
+        TaskResponse response = taskService.updateTask(id, request);
+
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteTask(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteTask(
+            @PathVariable Long id
+    ) {
         taskService.deleteTask(id);
+
+        return ResponseEntity.noContent().build();
     }
 }
