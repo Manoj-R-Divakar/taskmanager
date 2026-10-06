@@ -13,6 +13,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import org.springframework.transaction.annotation.Transactional;
+
 @Service
 public class TaskService {
 
@@ -57,6 +59,7 @@ public class TaskService {
         return convertToResponse(task);
     }
 
+    @Transactional
     public TaskResponse createTask(TaskRequest request) {
 
         User user = userRepository.findById(request.getUserId())
@@ -75,10 +78,11 @@ public class TaskService {
         task.setUser(user);
 
         Task savedTask = taskRepository.save(task);
-
+//        throw new RuntimeException("Intentional failure for transaction rollback test"); - Transaction rollback check
         return convertToResponse(savedTask);
     }
 
+    @Transactional
     public TaskResponse updateTask(
             Long id,
             TaskRequest request
